@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }};
+use Spatie\QueryBuilder\QueryBuilder;
+
+class {{ class }} extends QueryBuilder
+{
+    public function __construct()
+    {
+        parent::__construct({{ model }}::query());
+
+        $this->allowedFilters('updated_at', 'created_at')
+            ->allowedSorts('created_at')
+            ->allowedIncludes('team');
+    }
+}

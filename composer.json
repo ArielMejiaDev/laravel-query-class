@@ -1,0 +1,51 @@
+{
+    "name": "arielmejiadev/laravel-query-class",
+    "description": "it creates query classes to handle easily requests with multiple filters, sorts and includes.",
+    "keywords": [
+        "arielmejiadev",
+        "laravel-query-class"
+    ],
+    "homepage": "https://github.com/arielmejiadev/laravel-query-class",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ariel Mejia Dev",
+            "email": "arielmejiadev@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ArielMejiaDev\\LaravelQueryClass\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ArielMejiaDev\\LaravelQueryClass\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ArielMejiaDev\\LaravelQueryClass\\LaravelQueryClassServiceProvider"
+            ]
+        }
+    }
+}

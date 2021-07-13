@@ -1,0 +1,16 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Queries\EloquentQuery;
+use App\Models\{{ model }};
+
+class {{ class }} extends EloquentQuery
+{
+    public function __construct()
+    {
+        $this->query = {{ model }}::query();
+
+        $this->query->whereMonth('created_at', now()->month);
+    }
+}
