@@ -34,7 +34,7 @@ It would generate a class in `app/Http/Queries/Users/UserQuery.php`:
 
 You can choose if your query class would extend from `Spatie Query Builder` (REST API STANDARD) of from an `Eloquent` query class (for custom cases).
 
-
+![Screen Shot 2021-07-12 at 23 03 53](https://user-images.githubusercontent.com/31971074/125394326-c66af600-e366-11eb-8344-a9be05b8fcb1.png)
 
 ```bash
 namespace App\Http\Queries\Users;
