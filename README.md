@@ -18,13 +18,44 @@ You can install the package via composer:
 composer require arielmejiadev/laravel-query-class --dev
 ```
 
+## Stubs & Commands installation
+
+```bash
+php artisan query-class:install
+```
+
 ## Usage
 
-```php
+```bash
 php artisan make:query Users/UserQuery --model=User
 ```
 
-It would generate a class in `app/Http/Queries/Users/UserQuery.php`.
+It would generate a class in `app/Http/Queries/Users/UserQuery.php`:
+
+You can choose if your query class would extend from `Spatie Query Builder` (REST API STANDARD) of from an `Eloquent` query class (for custom cases).
+
+
+
+```bash
+namespace App\Http\Queries\Users;
+
+use App\Models\User;
+use Spatie\QueryBuilder\QueryBuilder;
+
+class UserQuery extends QueryBuilder
+{
+    public function __construct()
+    {
+        parent::__construct(User::query());
+
+        $this->allowedFilters('updated_at', 'created_at')
+            ->allowedSorts('created_at')
+            ->allowedIncludes('team');
+    }
+}
+```
+
+You can chain any Eloquent method or if you choose Spatie Query Builder methods from both tools. 
 
 Now you can inject the Query Class in any controller constructor and the Laravel container will resolve it by itself.
 
