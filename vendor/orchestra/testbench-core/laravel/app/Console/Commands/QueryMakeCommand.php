@@ -23,6 +23,13 @@ class QueryMakeCommand extends GeneratorCommand
     public function handle()
     {
         $this->askForABaseClass();
+
+        if ($this->selectedBaseClass === self::SPATIE && !$this->checkSpatieVendor()) {
+            $this->error('Spatie Query Builder is not installed.');
+            $this->warn('You can install the package with this command: composer require spatie/laravel-query-builder');
+            return null;
+        }
+
         return parent::handle();
     }
 
@@ -84,10 +91,21 @@ class QueryMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        if ($this->selectedBaseClass === self::SPATIE) {
-            return base_path('stubs/spatie-query.stub');
+        if ($this->selectedBaseClass === self::ELOQUENT) {
+            return base_path('stubs/eloquent-query.stub');
         }
-        return base_path('stubs/eloquent-query.stub');
+        $this->checkSpatieVendor();
+
+        return base_path('stubs/spatie-query.stub');
+    }
+
+    protected function checkSpatieVendor(): bool
+    {
+        $spatieQueryBuilderVendorName = 'Spatie\QueryBuilder\QueryBuilder';
+        if(!class_exists($spatieQueryBuilderVendorName)) {
+            return false;
+        }
+        return true;
     }
 
     /**
