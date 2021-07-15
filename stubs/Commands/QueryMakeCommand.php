@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,15 +21,23 @@ class QueryMakeCommand extends GeneratorCommand
 
     public function handle()
     {
-        $this->askForABaseClass();
+        $this->defineBaseClass();
 
-        if ($this->selectedBaseClass === self::SPATIE && !$this->checkSpatieVendor()) {
+        if ($this->selectedBaseClass === self::SPATIE && !$this->appHasSpatieQueryBuilderVendor()) {
             $this->error('Spatie Query Builder is not installed.');
             $this->warn('You can install the package with this command: composer require spatie/laravel-query-builder');
             return null;
         }
 
         return parent::handle();
+    }
+
+    public function defineBaseClass()
+    {
+        if ($this->appHasSpatieQueryBuilderVendor()) {
+            return $this->askForABaseClass();
+        }
+        return $this->selectedBaseClass = self::ELOQUENT;
     }
 
     public function askForABaseClass()
@@ -42,6 +49,14 @@ class QueryMakeCommand extends GeneratorCommand
         $this->selectedBaseClass = $this->baseClasses[$option];
     }
 
+    protected function appHasSpatieQueryBuilderVendor(): bool
+    {
+        $spatieQueryBuilderVendorName = 'Spatie\QueryBuilder\QueryBuilder';
+        if(!class_exists($spatieQueryBuilderVendorName)) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * The console command name.
@@ -65,6 +80,21 @@ class QueryMakeCommand extends GeneratorCommand
     protected $type = 'Query builder class';
 
     /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub(): string
+    {
+        if ($this->selectedBaseClass === self::ELOQUENT) {
+            return base_path('stubs/eloquent-query.stub');
+        }
+        $this->appHasSpatieQueryBuilderVendor();
+
+        return base_path('stubs/spatie-query.stub');
+    }
+
+    /**
      * Replace the class name for the given stub.
      *
      * @param  string  $stub
@@ -82,30 +112,6 @@ class QueryMakeCommand extends GeneratorCommand
         $stub = str_replace('{{ model }}', $modelName, $stub);
 
         return str_replace('{{ name }}', $className, $stub);
-    }
-
-    /**
-     * Get the stub file for the generator.
-     *
-     * @return string
-     */
-    protected function getStub(): string
-    {
-        if ($this->selectedBaseClass === self::ELOQUENT) {
-            return base_path('stubs/eloquent-query.stub');
-        }
-        $this->checkSpatieVendor();
-
-        return base_path('stubs/spatie-query.stub');
-    }
-
-    protected function checkSpatieVendor(): bool
-    {
-        $spatieQueryBuilderVendorName = 'Spatie\QueryBuilder\QueryBuilder';
-        if(!class_exists($spatieQueryBuilderVendorName)) {
-            return false;
-        }
-        return true;
     }
 
     /**
