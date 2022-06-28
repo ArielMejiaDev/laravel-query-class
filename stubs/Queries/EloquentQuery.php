@@ -14,6 +14,6 @@ abstract class EloquentQuery
 
     public function __call($name, $arguments)
     {
-        return $this->query->{$name}();
+        return $this->query->{$name}(...$arguments);
     }
 }
